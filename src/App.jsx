@@ -9,7 +9,8 @@ const App = () => {
 
         <Routes>
           <Route path="/" element={<SearchBar/>}></Route>
-          <Route path="/country/:tld" element={<Country/>}></Route>
+          <Route path="/country/:tld" element={<Country />}></Route>
+          <Route path="*" element={<SearchBar/>}></Route>
         </Routes>
 
         <Footer />
