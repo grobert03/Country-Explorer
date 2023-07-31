@@ -2,42 +2,28 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Suggestions from "./Suggestions";
 const Search = () => {
-  const [search, setSearch] = useState("");
   const [list, setList] = useState([]);
+  const [countries, setCountries] = useState([]);
 
   useEffect(() => {
-    if (search !== "") {
-      let array = [];
-      // Search for the country name
-      axios
-        .get(`https://restcountries.com/v3.1/name/${search}`)
-        .then(({ data }) => {
-          data.forEach((e) => {
-            array.push(e);
-          });
-          setList(array);
-        })
-        .catch((err) => {
-          if (err.response.status === 404) {
-            // Search for capital
-            axios
-              .get(`https://restcountries.com/v3.1/capital/${search}`)
-              .then(({ data }) => {
-                data.forEach((e) => {
-                  array.push(e);
-                });
-                setList(array);
-              })
-              .catch((err) => setList([]));
-          }
-        });
-    } else {
-      setList([]);
-    }
-  }, [search]);
+    axios
+      .get("https://restcountries.com/v3.1/all")
+      .then(({ data }) => {
+        let array = [];
+        data.forEach((e) => array.push(e));
+        setCountries(array);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const changeHandler = (value) => {
-    setSearch(value);
+    value = value.toLowerCase();
+    if (value === "") {
+      setList([])
+    } else {
+      setList(countries.filter(e => e.name.common.toLowerCase().startsWith(value) || (e.capital !== undefined ? e.capital[0].toLowerCase().startsWith(value) : false)))
+
+    }
   };
 
   return (
